@@ -2,6 +2,7 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import json
 import time
+import sys, os
 
 def add_values(sheet, row, timestamp, date, station, gasol1, gasol2, diesel):
 	sheet.update_cell(row, 1, timestamp)
@@ -13,10 +14,11 @@ def add_values(sheet, row, timestamp, date, station, gasol1, gasol2, diesel):
 
 
 def update(input_file):
+	auth_file = os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), 'client_secret.json')
 	# use creds to create a client to interact with the Google Drive API
 	scope = ['https://spreadsheets.google.com/feeds',
 	         'https://www.googleapis.com/auth/drive']
-	creds = ServiceAccountCredentials.from_json_keyfile_name('client_secret.json', scope)
+	creds = ServiceAccountCredentials.from_json_keyfile_name(auth_file, scope)
 	client = gspread.authorize(creds)
 
 	# Find a workbook by name and open the first sheet
