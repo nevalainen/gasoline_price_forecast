@@ -3,9 +3,12 @@ from bs4 import BeautifulSoup
 import json
 import time
 
+PAGE_URL = 'https://www.polttoaine.net/Riihima_ki'
+
 def update_json(price_file):
 	status = False
 
+	#For testing
 	EXAMPLE_DATA = [
 		'ABC, Karavaani Lasinristeys Punkantie 2 (E85 1.129), 130-tie, 3-tie15.04.1.3491.4391.249',
 		'ShellExpress, Et. Viertotie Kaarlonkatu 115.04.1.3241.4241.214',
@@ -25,20 +28,25 @@ def update_json(price_file):
 
 	#Make request for the page containing the price data, and converts it to 
 	#BeautifulSoup object
-	quote_page = 'https://www.polttoaine.net/Riihima_ki'
-	req = urllib.request.Request(quote_page, headers={'User-Agent': 'Mozilla/5.0'})
+	req = urllib.request.Request(PAGE_URL, headers={'User-Agent': 'Mozilla/5.0'})
 	page = urllib.request.urlopen(req).read()
 	soup = BeautifulSoup(page, 'html.parser')
-
+	"""
 	#This will search for the html table rows with class 'bg1 E10' and 'bg2 E10', where
 	#the price data is stored in polttoaine.net
+	"""
 	trs = soup.find_all('tr', {'class': 'bg2 E10'}) + soup.find_all('tr', {'class': 'bg1 E10'})
 	print("Scrapping data...")
 
+	"""
 	#Loops through "trs", which contains price from table in text format.
 	#It compares the text to items in bensa_asemat, and when it finds the correct text, 
 	#it parses the price data from the text row 
-	for row in trs: ##Change to trs
+
+	#TODO: Needs some validation that the data is in correct format
+	Currently this is too hard-coded, and relies on that polttoaine.net does not ever have incorrect data entered
+	"""
+	for row in trs:
 		for i in json_raw:
 			row_text = row.get_text()[2:] #Input text has two spaces at the beginning, [2:] "takes them off"
 			length = len(json_raw[i]['addr'])
@@ -57,4 +65,4 @@ def update_json(price_file):
 	return status
 
 if __name__ == '__main__':
-	update_json('daatta.json')
+	update_json('data.json')

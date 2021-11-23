@@ -1,8 +1,12 @@
+#TODO: Passing the values and updating the cells in some more compact way
+
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import json
 import time
 import sys, os
+
+SHEET_NAME = ""
 
 def add_values(sheet, row, timestamp, date, station, gasol1, gasol2, diesel):
 	sheet.update_cell(row, 1, timestamp)
@@ -23,7 +27,7 @@ def update(input_file):
 
 	# Find a workbook by name and open the first sheet
 	# Make sure you use the right name here.
-	sheet = client.open("bensanhinta").sheet1
+	sheet = client.open(SHEET_NAME).sheet1
 
 	# Extract values and check the length of the list (=how many data records are included)
 	list_of_hashes = sheet.get_all_records()
@@ -42,4 +46,4 @@ def update(input_file):
 	print("Done!")
 	
 if __name__ == '__main__':
-	update('daatta.json')
+	update('data.json')
